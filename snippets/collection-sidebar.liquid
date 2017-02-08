@@ -1,0 +1,55 @@
+<div class="sideBar oneQuarter flexItem">
+  {%if linklists.catalog.links.size >1%}
+    <label>{{linklists.catalog.title}}</label>
+    <ul>
+      {% for link in linklists.catalog.links %}
+        <li class="{%if link.active%}active{%endif%}"><a href="{{link.url}}">{{link.title}}</a></li>
+      {% endfor %}
+    </ul>
+  {%endif%}
+  {%if collection.all_tags.size > 0%}
+    <label>{{'collections.sidebar.filter_by_tag'|t}}</label>
+    <ul>
+      {% for tag in collection.all_tags %}
+        {% if current_tags contains tag %}
+          <li class="active">
+            {%assign rTag = tag%}
+            {{ tag | link_to_remove_tag: tag }}
+          </li>
+        {% else %}
+          <li>{{ tag | link_to_tag: tag }}</li>
+        {% endif %}
+      {% endfor %}
+      {% if current_tags %}
+        <li>{{'collections.sidebar.all_products'|t  | link_to_remove_tag: rTag}}</li>
+      {% endif %}
+    </ul>
+  {%endif%}
+  <label>{{'collections.sidebar.sort_by'|t}}</label>
+  <ul>
+    <li class="{%if collection.sort_by == "manual" or collection.sort_by == blank%}active{%endif%}">
+      <a href="{{ collection.url | sort_by: 'manual' }}">{{ 'collections.sorting.featured' | t }}</a>
+    </li>
+    <li class="{%if collection.sort_by == "best-selling"%}active{%endif%}">
+      <a href="{{ collection.url | sort_by: 'best-selling' }}">{{ 'collections.sorting.best_selling' | t }}</a>
+    </li>
+     <li class="{%if collection.sort_by == "title-ascending"%}active{%endif%}">
+      <a href="{{ collection.url | sort_by: 'title-ascending' }}">{{ 'collections.sorting.az' | t }}</a>
+    </li>
+    <li class="{%if collection.sort_by == "title-descending"%}active{%endif%}">
+      <a href="{{ collection.url | sort_by: 'title-descending' }}">{{ 'collections.sorting.za' | t }}</a>
+    </li>
+    <li class="{%if collection.sort_by == "price-ascending"%}active{%endif%}">
+      <a href="{{ collection.url | sort_by: 'price-ascending' }}">{{ 'collections.sorting.price_ascending' | t }}</a>
+    </li>
+    <li class="{%if collection.sort_by == "price-descending"%}active{%endif%}">
+      <a href="{{ collection.url | sort_by: 'price-descending' }}">{{ 'collections.sorting.price_descending' | t }}</a>
+    </li>
+     <li class="{%if collection.sort_by == "created-descending"%}active{%endif%}">
+      <a href="{{ collection.url | sort_by: 'created-descending' }}">{{ 'collections.sorting.date_descending' | t }}</a>
+    </li>
+    <li class="{%if collection.sort_by == "created-ascending"%}active{%endif%}">
+      <a href="{{ collection.url | sort_by: 'created-ascending' }}">{{ 'collections.sorting.date_ascending' | t }}</a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,44 @@
+<div class="fxInElement fadeIn fullScreenSlider slickSlider overlayFX">
+  <ul data-margin="0" data-full="1"  data-tab="1" data-mob="1" data-auto="{%if settings.hero_home_auto%}true{%else%}false{%endif%}" data-timeout="{{settings.home_hero_auto_speed}}">
+    {% assign counter = '' %}
+    {% for i in (1..6) %}
+      {% capture slide %}hero_slide_{{ i }}_enable{% endcapture %}
+      {% capture slide_img %}hero_slide_{{ i }}.jpg{% endcapture %}
+      {% capture slide_text_color %}hero_slide_{{ i }}_text_color{% endcapture %}
+      {% capture slide_heading %}hero_slide_{{ i }}_heading{% endcapture %}
+      {% capture slide_link %}hero_slide_{{ i }}_link{% endcapture %}
+      {% if settings[slide] %}
+        {% capture temp %}{{ counter }}*{% endcapture %}
+        {% assign counter = temp %}
+        <li>
+          <div class="bgImage {% if parallax %}paraOne{% endif %}">
+           <div class="zoomProxy backStretch" data-img="{{slide_img|asset_url}}"></div>
+          </div>
+          <div class="heroOverlay">
+            <div class="gridTable">
+              <div class="inner flexItem paraTwo">
+                {%if settings[slide_link] != ""%}
+                  <a  href="{{settings[slide_link]}}">{{settings[slide_heading]}}</a>
+                {%else%}
+                  {%if settings[slide_heading] != ""%}
+                    <p>{{settings[slide_heading]}}</p>
+                  {%endif%}
+                {%endif%}
+              </div>
+            </div>
+          </div>
+        </li>
+      {%endif%}
+    {%endfor%}
+  </ul>
+  {%if counter.size > 1%}
+    <span class="paraTwo control  prev">
+      {%include 'svg-definitions' with 'left-arrow'%}
+    </span>
+    <span class="paraTwo control next">
+      {%include 'svg-definitions' with 'right-arrow'%}
+    </span>
+  {%endif%}
+  
+  <span class="scrollDown">{%include 'svg-definitions' with 'down-arrow'%}</span>
+</div>

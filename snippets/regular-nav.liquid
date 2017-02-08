@@ -1,0 +1,20 @@
+<nav id="regularMenu">
+  <div class="grid">
+    <ul id="AccessibleNav" class="site-nav flexGrid gridJustify centerColumns nav__dropdown">
+      {%for link in linklists.main-menu.links%}
+        {%assign plink = link.title|handleize%}
+        {%if linklists[plink].links.size > 0%}{%assign hasDrop = 'true'%}{%else%}{%assign hasDrop = 'false'%}{%endif%}
+        <li {%if hasDrop != 'true'%}class="flexItem"{%else%}class="site-nav__item site-nav__expanded-item site-nav--has-dropdown hasDrop flexItem site-nav--has-dropdown" aria-haspopup="true"{%endif%}> 
+          <a  href="{{link.url}}" {%if hasDrop == 'true'%}class="parentLink site-nav__link"{%endif%}>{{link.title}}</a>
+          {%if hasDrop == 'true'%}
+            <ul class="dropDown site-nav__dropdown ">
+              {%for link in linklists[plink].links%}
+                <li><a class="site-nav__dropdown-link" href="{{link.url}}">{{link.title}}</a></li>
+              {%endfor%}  
+            </ul>
+          {%endif%}
+        </li>
+      {%endfor%}
+    </ul>
+  </div>
+</nav>

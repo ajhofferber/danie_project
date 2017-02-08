@@ -1,0 +1,82 @@
+<div class="accountWrap sectionWrap halfGutter">
+  <div class="grid flexGrid gridAlignTop">
+    <div class="formWrap oneThird flexItem">
+      <h1>{{ 'customer.account.details' | t }}</h1>
+      <h3>{{ customer.name }} |  {{ 'layout.customer.log_out'| t | customer_logout_link }}</h3>
+      {% if customer.default_address != nil %}
+        <p>
+          {{ customer.default_address.address1 }}<br>
+          {% if customer.default_address.address2 != "" %}
+            {{ customer.default_address.address2 }}<br>
+          {% endif %}
+          {% if customer.default_address.city != "" %}
+            {{ customer.default_address.city }}<br>
+          {% endif %}
+          {% if customer.default_address.province_code != "" %}
+            {{ customer.default_address.province_code | upcase }}<br>
+          {% endif %}
+          {% if customer.default_address.zip != "" %}
+            {{ customer.default_address.zip | upcase }}<br>
+          {% endif %}
+          {% if customer.default_address.country != "" %}
+            {{ customer.default_address.country }}<br>
+          {% endif %}
+          {% if customer.default_address.phone != "" %}
+            {{ customer.default_address.phone }}
+          {% endif %}
+        </p>
+      {% endif %}
+      <p><a href="/account/addresses">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a></p>
+    </div>
+    <div class="formWrap twoThird flexItem">
+      <h2>{{ 'customer.orders.title' | t }}</h2>
+      {% paginate customer.orders by 20 %}
+        {% if customer.orders.size != 0 %}
+          <table>
+            <thead>
+              <tr>
+                <th>{{ 'customer.orders.order_number' | t }}</th>
+                <th>{{ 'customer.orders.date' | t }}</th>
+                <th>{{ 'customer.orders.payment_status' | t }}</th>
+                <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+                <th>{{ 'customer.orders.total' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in customer.orders %}
+                <tr>
+                  <td>{{ order.name | link_to: order.customer_url }}</td>
+                  <td>{{ order.created_at | date: format: 'month_day_year' }}</td>
+                  <td>{{ order.financial_status_label }}</td>
+                  <td>{{ order.fulfillment_status_label }}</td>
+                  <td>{{ order.total_price | money }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p>{{ 'customer.orders.none' | t }}</p>
+        {% endif %}
+        {% if paginate.pages > 1 %}
+          <div class="pagination fullSpan flexItem flexGrid gridAlignLeft">
+            <hr>
+            <div class="leftSide half flexItem">
+              {% for part in paginate.parts %}
+                <a {%if part.title == paginate.current_page%}class="active"{%endif%} href="{{part.url}}">{{part.title}}</a>
+              {%endfor%}
+            </div>
+            <div class="rightSide half flexItem">
+              {% if paginate.previous %}
+                <a href="{{ paginate.previous.url }}">{{ paginate.previous.title | replace:'« ',''}}</a>
+                <span>/</span>
+              {% endif %}
+              {% if paginate.next %}
+                <a href="{{ paginate.next.url }}">{{ paginate.next.title | replace:' »', ''}}</a>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    {% endpaginate %}
+  </div>
+</div>

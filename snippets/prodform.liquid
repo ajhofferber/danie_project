@@ -1,0 +1,26 @@
+<form action="/cart/add" method="post" enctype="multipart/form-data" id="prodForm" data-product-form>
+  {%if product.variants.size >1%}
+    <select name="id" id="ProductSelect" class="product-single__variants">
+      {% for variant in product.variants %}
+        {% if variant.available %}
+          <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+        {% else %}
+          <option disabled="disabled">{{ variant.title }} - {{ 'products.product.sold_out' | t }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  {%else%}
+    <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+  {%endif%}
+
+  <button type="submit" name="add" id="AddToCart" class="button {% unless product.available %}disabled{% endunless %}" {% unless product.available %}disabled="disabled"{% endunless %}>
+    {% if product.available %}
+      <span id="AddToCartText">{{ 'products.product.add_to_cart' | t }}</span>
+    {% else %}
+      <span id="AddToCartText">{{ 'products.product.sold_out' | t }}</span>
+    {% endif %}
+    <span class="add-to-cart-loading"></span>
+  </button>
+</form>
+
+

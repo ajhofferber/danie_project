@@ -1,0 +1,49 @@
+{% assign on_sale = false %}
+{% if product.compare_at_price > product.price %}
+  {% assign on_sale = true %}
+{% endif %}
+{% assign sold_out = true %}
+{% if product.available %}
+  {% assign sold_out = false %}
+{% endif %}
+
+<li class="prodThumb oneThird flexItem">
+  <a href="{{ product.url | within: collection }}">
+    {% if on_sale %}
+      <span class="tag">{{ 'products.product.on_sale' | t}}</span>
+    {%endif%}
+    {% if sold_out %}
+      <span class="tag">{{ 'products.product.sold_out' | t}}</span>
+    {% endif %}
+       {%if product.images.size > 1%}
+        <div class="imgWrap gridJustify centerColumns slickImgWrap twoImg">
+          <img src="{{product.images.first | img_url:'grande'}}" alt="{{product.images.first.alt}}">
+          <img class="second" src="{{product.images[1] | img_url:'grande'}}" alt="{{product.images[1].alt}}">
+        </div>
+      {%else%}
+        <div class="imgWrap  gridJustify centerColumns slickImgWrap">
+          <img src="{{product.images.first | img_url:'grande'}}" alt="{{product.images.first.alt}}">
+        </div>
+      {%endif%}
+      <div class="title gridJustify">
+      <span>{{product.title}}{{img_url}}</span>
+      <span>
+        {% if on_sale %}
+          {% if product.price_varies %}
+            {% assign price = product.price | money %}
+              {{ 'products.general.from_text_html' | t: price: price }}
+          {% else %}
+            <strike>{{ product.compare_at_price | money }}</strike> {{ product.price | money }}
+          {% endif %}
+        {% else %}
+          {% if product.price_varies %}
+            {% assign price = product.price | money %}
+            {{ 'products.general.from_text_html' | t: price: price }}
+          {% else %}
+            {{ product.price | money }}
+          {% endif %}
+        {% endif %}
+      </span>
+    </div>
+  </a>
+</li>

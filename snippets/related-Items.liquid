@@ -1,0 +1,50 @@
+{%assign handle = product.handle%}
+{% assign counter = '' %}
+{%if collection%}
+  {%assign getCollection = collection.handle%}
+  {%capture productString%}{%for product in collections[getCollection].products%}{%unless product.handle == handle %}{{product.handle}}{%endunless%}{%endfor%}{%endcapture%}
+  {%if collection.all_products_count < 4%}
+    {%assign needsExtra = true%}
+  {%endif%}
+{%else%}
+  {%assign getCollection = "all"%}
+{%endif%}
+{%if shop.products_count > 2%}
+  <div class="{%if settings.featuredProductsSliderAccent%}accentCollection{%endif%}">
+    <div class="sectionWrap relatedItems featuredSliderWrap slickSlider">
+      <h2 class="genHeading">{{ 'products.product.related_items_title' | t }}</h2>
+      <div class="grid">
+        <ul class="productListing flexWrap"  data-full="3"  data-tab="2" data-mob="1" data-auto="false" data-timeout="" >
+          {% for product in collections[getCollection].products%}
+            {%if product.handle != handle and counter.size < 12%}
+              {%unless  product.handle == 'gift-card' %}
+                {% capture temp %}{{ counter }}*{% endcapture %}
+                {% assign counter = temp %}
+                {%include 'product-thumb-slick' %}
+              {%endunless%}
+            {%endif%}
+          {%endfor%}
+          {%if needsExtra == true%}
+            {% for product in collections.all.products%}
+              {%if product.handle != handle and counter.size < 12 %}
+                {%unless productString contains  product.handle or product.handle == 'gift-card'%}
+                  {% capture temp %}{{ counter }}*{% endcapture %}
+                  {% assign counter = temp %}
+                  {%include 'product-thumb-slick' %}
+                {%endunless%}
+              {%endif%}
+            {%endfor%}
+          {%endif%}  
+        </ul>
+        {%if counter.size > 3%}
+          <span class="control  prev">
+            {%include 'svg-definitions' with 'left-arrow'%}
+          </span>
+          <span class="control next">
+            {%include 'svg-definitions' with 'right-arrow'%}
+          </span>
+        {%endif%}
+      </div>
+    </div>
+  </div>
+{%endif%}

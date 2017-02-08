@@ -1,0 +1,15 @@
+<div class="featuredSliderWrap slickSlider {% if collection.products.size <= 3 %}has-few-items{% endif %} has-{{ collection.products.size }}-items">
+  <div class="grid easeIn">
+    <ul class="productListing flexGrid gridJustify" data-full="3"  data-tab="2" data-mob="1" data-auto="false" data-timeout="" >
+      {% for product in collection.products %}
+        {%include 'product-thumb-slick' %}
+      {%endfor%}
+    </ul>
+    <span class="paraTwo control  prev">
+      {%include 'svg-definitions' with 'left-arrow'%}
+    </span>
+    <span class="paraTwo control next">
+      {%include 'svg-definitions' with 'right-arrow'%}
+    </span>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<div id="contactUs" class="sectionWrap halfGutter collectionTitle">
+  <div class="grid flexGrid gridJustify centerColumns">
+    <div class="half flexItem ieFlexFix">
+      <h1 class="genHeading">{{page.title}}</h1>
+      {%if settings.google_map_iframe != blank%}
+        <div class="mapWrap">
+          {{settings.google_map_iframe}}
+        </div>
+      {%endif%}
+      <div class="rte">{{page.content}}</div>
+      <div class="formWrap contactForm">
+        {% form 'contact' %}
+          {% if form.posted_successfully? %}
+            <p class="note success">
+              {{ 'contact.form.post_success' | t }}
+            </p>
+          {% endif %}
+          {{ form.errors | default_errors }}
+          <label>{{ 'contact.form.name' | t }}</label>
+          <input type="text" value="" id="contactFormName" name="contact[name]" size="30"  placeholder="{{ 'contact.form.name' | t }}" required/>
+          <label>{{ 'contact.form.email' | t }}</label>
+          <input type="email" value="" id="contactFormEmail" name="contact[email]" size="30" placeholder="{{ 'contact.form.email' | t }}" required/>
+          <label>{{ 'contact.form.message' | t }}</label>
+          <textarea rows="5" placeholder="{{ 'contact.form.message' | t }}" id="contactFormMessage" name="contact[body]" required></textarea>
+          <input class="button" type="submit" value="{{ 'contact.form.send' | t }}" />
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</div>
+

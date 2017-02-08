@@ -1,0 +1,116 @@
+<footer>
+  <div class="footerTop">
+    <div class=" grid flexGrid gridJustify">
+      <form id="footerSearch" class="flexItem fullSpan" action="/search" method="get" role="search">
+        <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" class="input-group-field" aria-label="{{ 'general.search.placeholder' | t }}">
+        <button type="submit" class="button tranBack">
+          {%include 'svg-definitions' with 'search'%}
+        </button>
+      </form>
+      <div class="leftSide flexItem oneThird">
+        {%if settings.footer_address%}
+          {%if shop.address.street != blank%}
+            <span>{{shop.address.street}}</span>
+          {%endif%}
+          {%if shop.address.city != blank%}
+            <span>{{shop.address.city}}</span>
+          {%endif%}
+          {%if shop.address.zip != blank%}
+            <span>{{shop.address.zip}}</span>
+          {%endif%}
+        {%endif%}
+      </div>
+      <a href="#" class="toTop flexItem oneThird forceCenter">
+        {%include 'svg-definitions' with 'up-arrow'%}
+      </a>
+      <div class="rightSide flexItem oneThird alignRight">
+        {%if settings.footer_show_contact_email and shop.email != blank%}
+          <a href="mailto:{{shop.email}}">{{shop.email}}</a>
+        {%endif%}
+        {%if settings.footer_show_contact_phone and shop.email != blank%}
+          <a href="tel:{{shop.phone}}">{{shop.phone}}</a>
+        {%endif%}
+      </div>
+    </div>
+  </div>
+  <div class="grid footerBottom flexGrid gridJustify">
+    <ul class="leftSide flexItem oneThird">
+      {% if settings.social_facebook_link != blank %}
+        <li>
+          <a href="{{ settings.social_facebook_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Facebook' }}">
+          Facebook
+          </a>
+        </li>
+      {% endif %}
+      {% if settings.social_twitter_link != blank %}
+        <li>
+          <a href="{{ settings.social_twitter_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Twitter' }}">
+          Twitter
+          </a>
+        </li>
+      {% endif %}
+      {% if settings.social_pinterest_link != blank %}
+        <li>
+          <a href="{{ settings.social_pinterest_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Pinterest' }}">
+            Pinterest
+          </a>
+        </li>
+      {% endif %}
+      {% if settings.social_instagram_link != blank %}
+        <li>
+          <a href="{{ settings.social_instagram_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Instagram' }}">
+          Instagram
+          </a>
+        </li>
+      {% endif %}
+      {% if settings.social_google_plus_link != blank %}
+        <li>
+          <a href="{{ settings.social_google_plus_link }}" rel="publisher" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Google Plus' }}">
+          Google Plus
+          </a>
+        </li>
+      {% endif %}
+      {% if settings.social_snapchat_link != blank %}
+        <li>
+          <a href="{{ settings.social_snapchat_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Snapchat' }}">
+          Snapchat
+          </a>
+        </li>
+      {% endif %}
+      {% if settings.social_tumblr_link != blank %}
+        <li>
+          <a href="{{ settings.social_tumblr_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Tumblr' }}">
+          Tumblr
+          </a>
+        </li>
+      {% endif %}
+      {% if settings.social_youtube_link != blank %}
+        <li>
+          <a href="{{ settings.social_youtube_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'YouTube' }}">
+          YouTube
+          </a>
+        </li>
+      {% endif %}
+        {% if settings.social_vimeo_link != blank %}
+        <li>
+          <a href="{{ settings.social_vimeo_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Vimeo' }}">
+          Vimeo
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+    {% unless shop.enabled_payment_types == empty %}
+      <div class="grid paymentTypes oneThird">
+        <ul class="flexGrid centerColumns gridJustify fullSpan centerContent">
+          {% for type in shop.enabled_payment_types %}
+            <li class="flexItem alignCenter">
+              <img src="{{ type | payment_type_img_url }}" />
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endunless %}
+    <p class="flexItem alignRight oneThird">Built by <a href="#">Fluorescent</a> & {{powered_by_link}}</p>
+  </div>
+
+</footer>

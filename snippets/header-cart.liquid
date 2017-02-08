@@ -1,0 +1,42 @@
+<div class="header-cart invisible" data-header-cart="{{ shop.money_format }}">
+  <div class="header-cart-items" data-header-cart-items>
+    {% for item in cart.items %}
+      {% assign maxQuantity = 0 %}
+      {% if item.variant.inventory_management == 'shopify' and item.variant.inventory_policy == 'deny' %}
+        {% assign maxQuantity = item.variant.inventory_quantity %}
+      {% endif %}
+
+      <article class="header-cart-item" data-header-cart-item="{{ item.id }}">
+        {% assign imageSize = "80x" %}
+        <a class="header-cart-item-image" href="{{ item.url }}">
+          <img src="{{ item | img_url: imageSize }}"
+               srcset="{{ item | img_url: imageSize }} 1x, {{ item | img_url: imageSize, scale: 2 }} 2x"
+               alt="{{ item.title | escape }}">
+        </a>
+        <div class="header-cart-item-info">
+          <h3><a href="{{ item.url }}">{{ item.product.title }}</a></h3>
+          <span class="money">{{ item.price | money }}</span>
+
+          <div class="header-cart-item-options" data-header-cart-options>
+            {% unless item.variant.options.size == 1 and item.variant.options[0] == "Default Title" %}
+              {% for variant in item.variant.options %}
+                <span>{{ item.product.options[forloop.index0] }} <strong>{{ variant }}</strong></span>
+              {% endfor %}
+            {% endunless %}
+            <span>
+              {{ 'layout.cart.quantity' | t }} <strong><input type="number" min="0" {% if maxQuantity > 0 %}max="{{ maxQuantity }}"{% endif %} value="{{ item.quantity }}" readonly></strong>
+              <button type="button" data-header-cart-quantity-increase="{{ item.id }}">&plus;</button>
+              <button type="button" data-header-cart-quantity-decrease="{{ item.id }}">&minus;</button>
+            </span>
+          </div>
+        </div>
+      </article>
+    {% endfor %}
+    <p class="header-cart-empty {% if cart.item_count > 0 %}hidden{% endif %}">{{ 'products.product.empty_cart' | t }}</p>
+  </div>
+  <div class="header-cart-footer">
+    <span>{{ 'layout.cart.subtotal' | t }}</span>
+    <span class="money" data-header-cart-total>{{ cart.total_price | money }}</span>
+  </div>
+  <a class="button fullSpan" href="/cart">{{ 'layout.cart.view_cart' | t }}</a>
+</div>

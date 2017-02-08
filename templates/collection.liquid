@@ -1,0 +1,61 @@
+{%if collection.image%}
+  <div class="stripHero fixedHeight" style="background-image:url({{ collection.image.src | img_url: 'master' }});"></div>
+{%endif%}
+<div class="sectionWrap halfGutter collectionTitle">
+  <div class="grid flexGrid gridJustify">
+    <div class="twoThird flexItem">
+      <h1 class="genHeading">{{collection.title}}</h1>
+      {% if collection.description != blank %}
+        <div class="rte">{{collection.description}}</div>
+      {%endif%}
+    </div>
+  </div>
+</div>
+<div class="sectionWrap halfGutter hasGrid">
+  <div class="grid flexGrid gridAlignTop">
+    {%if collection.products.size == 0%}
+      <p class="alignCenter fullSpan">{{ 'collections.general.no_matches' | t }}</p>
+    {%else%}
+      {%include 'mobile-collection-nav'%}
+
+      {% if settings.collection_sidebar %}
+        {% include 'collection-sidebar' %}
+      {% endif %}
+
+      {% assign collectionPaginate = 12 %}
+      {% if settings.collection_sidebar %}
+        {% assign collectionPaginate = 10 %}
+      {% endif %}
+
+      {% paginate collection.products by collectionPaginate %}
+        <ul class="productListing {% if settings.collection_sidebar %}threeQuarter{% else %}fullSpan{% endif %} flexGrid flexItem gridAlignLeft">
+          {% assign productWidth = 'thirds' %}
+          {% if settings.collection_sidebar %}
+            {% assign productWidth = 'half' %}
+          {% endif %}
+          {% for product in collection.products %}
+            {%include 'product-thumb' with productWidth %}
+          {%endfor%}
+        </ul>
+       {%if paginate.parts.size > 1%}
+         <div class="pagination {% if settings.collection_sidebar %}threeQuarter{% else %}fullSpan{% endif %} flexItem flexGrid gridAlignLeft">
+           <div class="leftSide half flexItem">
+             {% for part in paginate.parts %}
+               <a {%if part.title == paginate.current_page%}class="active"{%endif%} href="{{part.url}}">{{part.title}}</a>
+             {%endfor%}
+           </div>
+           <div class="rightSide half flexItem">
+             {% if paginate.previous %}
+               <a href="{{ paginate.previous.url }}">{{ paginate.previous.title | replace:'« ',''}}</a>
+               <span>/</span>
+             {% endif %}
+             {% if paginate.next %}
+               <a href="{{ paginate.next.url }}">{{ paginate.next.title | replace:' »', ''}}</a>
+             {% endif %}
+           </div>
+         </div>
+       {%endif%}
+     {% endpaginate %}
+   {%endif%}
+  </div>
+</div>

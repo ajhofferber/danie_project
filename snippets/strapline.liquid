@@ -1,0 +1,7 @@
+{%if settings.strapline_content != ""%}
+{%if settings.strapline_link != ""%}
+<a href="{{settings.strapline_link}}" class="strapLine">{{settings.strapline_content}}</a>
+{%else%}
+<p class="strapLine">{{settings.strapline_content}}</p>
+{%endif%}
+{%endif%}

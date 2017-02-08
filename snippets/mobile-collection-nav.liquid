@@ -1,0 +1,73 @@
+{%if collection.all_tags.size > 0%}
+  <div class="mobileFilter">
+    <label>{{'collections.sidebar.filter_by_tag'|t}}</label>
+    <select id="tag-filter"class="coll-filter">
+      <option value="">{{'collections.sidebar.all_products'|t}}</option>
+      {% for tag in collection.all_tags %}
+        {% if current_tags contains tag %}
+          <option value="{{ tag | handle }}" selected>{{ tag }}</option>
+        {% else %}
+          <option value="{{ tag | handle }}">{{ tag }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </div>
+{%endif%}
+
+<div class="mobileFilter">
+  <label for="sort-by">{{'collections.sidebar.sort_by'|t}}</label> 
+  <select id="sort-by">
+    <option value="manual" {%if collection.sort_by == "manual" or collection.sort_by == blank%}selected{%endif%}>{{ 'collections.sorting.featured' | t }}</option>
+    <option value="best-selling" {%if collection.sort_by == "best-selling"%}selected{%endif%}>{{ 'collections.sorting.best_selling' | t }}</option>
+    <option value="title-ascending" {%if collection.sort_by == "title-ascending"%}selected{%endif%}>{{ 'collections.sorting.az' | t }}</option>
+    <option value="title-descending" {%if collection.sort_by == "title-descending"%}selected{%endif%}>{{ 'collections.sorting.za' | t }}</option>
+    <option value="price-ascending" {%if collection.sort_by == "price-ascending"%}selected{%endif%}>{{ 'collections.sorting.price_ascending' | t }}</option>
+    <option value="price-descending" {%if collection.sort_by == "price-descending"%}selected{%endif%}>{{ 'collections.sorting.price_descending' | t }}</option>
+    <option value="created-ascending" {%if collection.sort_by == "created-descending"%}selected{%endif%}>{{ 'collections.sorting.date_descending' | t }}</option>
+    <option value="created-descending" {%if collection.sort_by == "created-ascending"%}selected{%endif%}>{{ 'collections.sorting.date_ascending' | t }}</option>
+  </select>
+</div>
+
+<script>
+  /* Product Tag Filters - Good for any number of filters on any type of collection pages */
+  /* Brought to you by Caroline Schnapp */
+  var collFilters = jQuery('.coll-filter');
+  collFilters.change(function() {
+    var newTags = [];
+    collFilters.each(function() { 
+      if (jQuery(this).val()) {
+        newTags.push(jQuery(this).val());
+      }
+    });
+    if (newTags.length) {
+      var query = newTags.join('+');
+      window.location.href = jQuery('{{ 'tag' | link_to_tag: 'tag' }}').attr('href').replace('tag', query);
+    } 
+    else {
+      {% if collection.handle %}
+      window.location.href = '/collections/{{ collection.handle }}';
+      {% elsif collection.products.first.type == collection.title %}
+      window.location.href = '{{ collection.title | url_for_type }}';
+      {% elsif collection.products.first.vendor == collection.title %}
+      window.location.href = '{{ collection.title | url_for_vendor }}';
+      {% endif %}
+    }
+  });
+      
+
+Shopify.queryParams = {};
+if (location.search.length) {
+  for (var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&'); i < aCouples.length; i++) {
+    aKeyValue = aCouples[i].split('=');
+    if (aKeyValue.length > 1) {
+      Shopify.queryParams[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(aKeyValue[1]);
+    }
+  }
+}
+jQuery('#sort-by')
+  .val('{{ collection.sort_by | default: collection.default_sort_by | escape }}')
+  .bind('change', function() {
+    Shopify.queryParams.sort_by = jQuery(this).val();
+    location.search = jQuery.param(Shopify.queryParams).replace(/\+/g, '%20');
+  });
+</script>

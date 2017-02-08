@@ -1,0 +1,31 @@
+{%assign thumbSize = blog-thumb%}
+{% case thumbSize %}
+  {% when 'half' %}
+    {%assign size = "half"%}
+  {% when 'thirds' %}
+    {%assign size = "oneThird"%}
+  {% when 'quarters' %}
+    {%assign size = "oneQuarter"%}
+  {% when 'mixGrid' %}
+    {%capture size%}
+      {%cycle 'half','half','oneThird','oneThird','oneThird'%}
+    {%endcapture%}
+  {% when 'mixGridTwo' %}
+    {%capture size%}
+      {%cycle 'oneThird','oneThird','oneThird', 'half','half'%}
+    {%endcapture%}
+{%endcase%}
+
+<li class="blogThumb flexItem {{size}}">
+  <a href="{{article.url}}">
+    {%if article.image%}
+      <div class="imgWrap" style="background-image:url({{ article.image.src | img_url: '1024x1024' }});"></div>
+    {%endif%}
+    <div class="content">
+      <span>{{ article.published_at | date: '%B %d, %Y' }}</span>
+      <p>{{article.title}}</p>
+      <p>{{ article.excerpt_or_content | strip_html | truncatewords: 42 }}</p>
+    </div>
+    <p><a class="readmore" href="{{ article.url }}">{{ 'blogs.article.read_more' | t }}</a></p>
+  </a>
+</li>

@@ -1,0 +1,53 @@
+{%assign layoutType = settings.home_featured_products_layout_type%}
+{%assign collection = collections[settings.home_featured_products_collection]%}
+{%if collection.products.size > 0%}
+  <div  id="featuredProducts" class="fxInElement sectionWrap hasGrid hasBlockTitle {%if layoutType == 'slider' and settings.featuredProductsSliderAccent%}accentCollection{%endif%}">
+    {%if settings.home_featured_products_title or settings.home_featured_products_desc%}
+      <div class="fxInElement easeIn">
+        <div class="blockTitle flexGrid">
+          {%if settings.home_featured_products_title%}
+            <h2 class="genHeadingXL half flexItem">{{collection.title}}</h2>
+          {%endif%}
+          {%if settings.home_featured_products_desc and collection.description != blank%}
+            <div class="rte half flexItem">{{collection.description}}</div>
+          {%endif%}
+        </div>
+      </div>
+    {%endif%}
+    {%if layoutType == 'grid'%}
+      <div class="fxInElement easeIn grid">
+        <ul class="productListing flexGrid gridJustify centerColumns">
+          {%for product in collection.products %}
+            {%assign rows = settings.home_featured_products_rowSize%}
+            {%include 'product-thumb' with rows%}
+          {%endfor%}
+         </ul>
+       </div>
+    {%endif%}
+    {%if layoutType == 'slider'%}
+      {%include 'featured-product-slider'%}
+    {%endif%}
+    {%if layoutType == 'parallax'%}
+      {%include 'featured-product-parallax'%}
+    {%endif%}
+  </div>
+{%else%}
+  <div class="sectionWrap hasGrid hasBlockTitle">
+    <div class="fxInElement easeIn">
+      <div class="blockTitle flexGrid">
+        <h2 class="genHeadingXL half flexItem">{{ 'homepage.onboarding.title' | t }}</h2>
+        <div class="rte half flexItem">
+          <p>{{ 'homepage.onboarding.product_helper_text' | t }}</p>
+          <p><a href="/admin" >{{ 'homepage.onboarding.adminLink' | t }}</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="fxInElement easeIn grid">
+      <ul class="productListing flexGrid gridJustify centerColumns">
+        {%for i in (1..6)%}
+          {%include 'onboarding' with 'product-thumb'%}
+        {%endfor%}
+      </ul>
+    </div>
+  </div>
+{%endif%}

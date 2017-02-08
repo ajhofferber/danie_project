@@ -1,0 +1,75 @@
+{% assign counter = '' %}
+{%capture onboarding%}
+  {%for i in (1..8)%}
+    {%capture getCollection%}collection_{{i}}{%endcapture%}
+    {%assign coll = settings[getCollection]%}
+    {%if settings[getCollection] != blank %}
+      {% capture temp %}{{ counter }}*{% endcapture %}
+      {% assign counter = temp %}
+    {%endif%}
+  {%endfor%}
+{%endcapture%}
+{%assign counter = counter.size%}
+{%if counter > 0%}
+  {%assign onboarding = false%}
+{%else%}
+  {%assign onboarding = true%}
+{%endif%}
+{%if onboarding == false%}
+  <div class="collectionGrid sectionWrap hasGrid">
+    <div class="grid fxInElement easeIn">
+      {%if settings.collections_title != "" or settings.collections_description != ""%}
+        <div class="fxInElement easeIn">
+          <div class="blockTitle flexGrid">
+            {%if settings.collections_title != ""%}
+              <h2 class="genHeadingXL">{{settings.collections_title}}</h2>
+            {%endif%}
+            {%if  settings.collections_description != ""%}
+              <div class="rte half flexItem">{{settings.collections_description}}</div>
+           {%endif%}
+         </div>
+       </div>
+     {%endif%}
+     <ul class="flexGrid gridJustify centerColumns">
+       {%assign row = settings.home_featured_collections_rowSize%}
+        {%if counter == 1%}
+          {%assign row = 'full'%}
+        {%endif%}
+        {%for i in (1..counter)%}
+          {%capture getCollection%}collection_{{i}}{%endcapture%}
+          {%assign coll = settings[getCollection]%}
+          {%assign collection = collections[coll]%}
+          {%assign title = collection.title%}
+          {%assign link = collection.url%}
+          {%if collection.image%}
+            {%assign image = collection.image | img_url:'grande'%}
+          {%else%}
+            {%assign image = collection.products.first | img_url:'grande'%}
+          {%endif%}
+          {%unless collection.products.size == 0%}
+            {%include 'collection-thumb' with row%}
+          {%endunless%}
+        {%endfor%}
+      </ul>
+    </div>
+  </div>
+{%else%}
+  <div class="collectionGrid sectionWrap hasBlockTitle hasGrid">
+    <div class="fxInElement easeIn">
+      <div class="blockTitle flexGrid">
+        <h2 class="genHeadingXL half flexItem">{{ 'homepage.onboarding.title' | t }}</h2>
+        <div class="rte half flexItem">
+          <p>{{ 'homepage.onboarding.product_helper_text' | t }}</p>
+          <p><a href="/admin" >{{ 'homepage.onboarding.adminLink' | t }}</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="fxInElement easeIn grid">
+      <ul class="flexGrid gridJustify centerColumns">
+        {%for i in (1..2)%}
+          {%include 'onboarding' with 'collection-thumb'%}
+        {%endfor%}
+      </ul>
+    </div>
+  </div>
+{%endif%}

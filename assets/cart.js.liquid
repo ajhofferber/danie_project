@@ -1,0 +1,47 @@
+if((typeof Shopify) === 'undefined') {
+  Shopify = {};
+}
+/*ajax update cartpage only*/
+Shopify.updateCartPage = function(qtyInput) {
+  var lineItem = qtyInput.attr('data-lineItem'),
+    qty = qtyInput.val(),
+    money_format = qtyInput.parents('form').attr('data-money_format'),
+    $cartRow = qtyInput.parents('.cartRow'),
+    $cartHeading = $('#cartHeading'),
+    $cartTotal = $('#cartTotal'),
+    $cartItemCount = $('#cartItemCount'),
+    $cartForm = $('#cartForm'),
+    emptyCart = '{{ 'cart.general.empty' | t }} {{ 'cart.general.continue_browsing_html' | t }}',
+    itemsCart = '{{ 'cart.general.subtotal' | t }}';
+
+  $('.qtyInput').attr('disabled', 'disabled');
+
+  $.ajax({
+    type: 'POST',
+    url: '/cart/change.js',
+    data: 'quantity=' + qty + '&line=' + lineItem,
+    dataType: 'json',
+    success: function(cart) {
+      // Re-initialize additional cart buttons
+      {% if settings.cart_additional_buttons %}
+      if (window.Shopify && Shopify.StorefrontExpressButtons) {
+        Shopify.StorefrontExpressButtons.initialize();
+      }
+      {% endif %}
+      //remove line item if val is 0
+      if(qty == 0) {
+        $cartRow.remove();
+      }
+      //update cart price
+      var total_price = cart.total_price
+      if(total_price === 0) {
+        $cartHeading.html(emptyCart);
+        $cartForm.remove();
+      } else {
+        $cartTotal.html(Shopify.formatMoney(cart.total_price, money_format));
+      }
+      $('.qtyInput').attr('disabled', false);
+      $cartItemCount.html(cart.item_count)
+    }
+  });
+}

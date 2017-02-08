@@ -1,0 +1,33 @@
+<a href="#" class="burgerNav" aria-controls="NavDrawer" aria-expanded="false">
+  <span></span>
+  <span></span>
+  <span></span>
+</a>
+<nav id="burgerMenu">
+  <ul>
+    {%for link in linklists.main-menu.links%}
+      {%assign plink = link.title|handleize%}
+      {%if linklists[plink].links.size > 0%}{%assign hasDrop = 'true'%}{%else%}{%assign hasDrop = 'false'%}{%endif%}
+      <li {%if hasDrop == 'true'%}class="hasDrop"{%endif%}><a {%if hasDrop == 'true'%}class="parentLink"{%endif%} href="{{link.url}}">{{link.title}}</a>
+        {%if hasDrop == 'true'%}
+          <ul class="dropDown">
+            {%for link in linklists[plink].links%}
+              <li>
+                <a href="{{link.url}}">{{link.title}}</a>
+              </li>
+            {%endfor%}  
+          </ul>
+        {%endif%}
+      </li>
+    {%endfor%}
+    <li class="mobAccount">
+      {% if shop.customer_accounts_enabled %}
+        {%if customer%}
+          <a href="/account">{{ 'layout.customer.account' | t }}</a>
+        {%else%}
+          {{ 'layout.customer.log_in' | t | customer_login_link }}
+        {%endif%}
+      {% endif %}
+    </li>
+  </ul>
+</nav>

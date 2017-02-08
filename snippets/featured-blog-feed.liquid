@@ -1,0 +1,25 @@
+{%assign nPosts = settings.home_featured_blog_limit%}
+{%assign layoutType = settings.home_featured_blog_row_size%}
+{%assign blog = blogs[settings.home_featured_blog_selection]%}
+<div  id="featuredBlogposts" class="fxInElement sectionWrap hasGrid hasBlockTitle">
+  {%if settings.home_featured_blog_title%}
+    <div class="fxInElement easeIn">
+      <div class="blockTitle flexGrid">
+        <h2 class="genHeadingXL half flexItem">{{blog.title}}</h2>
+      </div>
+    </div>
+  {%endif%}
+  <div class="grid fxInElement flexGrid easeIn">
+    <ul class="blogListing gridAlignTop isotope">
+      {%for article in blog.articles limit: nPosts%}
+        {%include 'blog-thumb' with layoutType%}
+      {%endfor%}
+    </ul>
+  </div>
+</div>
+
+<script>
+  $(function() {
+    isotopeblog();
+  });
+</script>

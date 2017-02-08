@@ -1,0 +1,29 @@
+{%assign onboardingType = onboarding%}
+{% case onboardingType %}
+  {% when 'product-thumb' %}
+    <li class="prodThumb oneThird flexItem">
+      <a href="#">
+        <div class="imgWrap">
+          {% capture imageUrl %}//cdn.shopify.com/s/images/themes/product-{%cycle '1','2','3','4' %}.png{% endcapture %}
+          {{ imageUrl | img_tag }}
+        </div>
+        <div class="title gridJustify">
+          <span>{{ 'homepage.onboarding.product_title' | t }}</span>
+          <span>{{ 99 | money }}</span>
+        </div>
+      </a>
+    </li>
+  {% when 'collection-thumb' %}
+    <li class="half flexItem">
+      {% capture imageUrl %}//cdn.shopify.com/s/images/themes/product-{%cycle '1','2','3','4' %}.png{% endcapture %}
+      <a href="#" style="background-image:url({{imageUrl}});">
+        <div class="content">
+          <div class="gridTable">
+            <div class="flexItem">
+              <p class="genHeadingXL">{{ 'homepage.onboarding.collection_title' | t }}</p>
+            </div>
+          </div>
+        </div>
+      </a>
+    </li>
+{%endcase%}

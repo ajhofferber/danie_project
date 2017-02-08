@@ -1,0 +1,48 @@
+{% assign counter = '' %}
+{% for i in (1..4) %}
+  {% capture section %}home_section_{{ i }}{% endcapture %}
+  {% if settings[section] != blank %}
+    {% capture temp %}{{ counter }}*{% endcapture %}
+    {% assign counter = temp %}
+  {% endif %}
+{%endfor%}
+{%assign loops = counter.size%}
+
+{% assign counter = '' %}
+{% assign border = true %}
+{% for i in (1..6) %}
+  {% capture section %}home_section_{{ i }}{% endcapture %}
+  {% if settings[section] != blank %}
+    {% capture temp %}{{ counter }}*{% endcapture %}
+    {% assign counter = temp %}
+    {% assign section_name = settings[section] %}
+    {% if border %}
+      {%unless counter.size == 1 or section_name == 'full-page-sections' or section_name == 'hero' %}
+        <hr>
+      {%endunless%}
+    {% endif %}
+    {% assign number_of_index_sections = number_of_index_sections | plus: 1 %}
+    {%assign L = forloop.index%}
+    {% assign isFirst = false %}
+    {% assign isLast = false %}
+    {% if counter.size == 1 %}{% assign isFirst = true %}{% endif %}
+    {% if counter.size == loops %}{% assign isLast = true %}{% endif %}
+    {% include settings.[section], section_number: L, is_first: isFirst, is_last: isLast %}
+    {% assign border = true %}
+    {% if section_name == 'full-page-sections' or section_name == 'hero' %}
+      {% assign border = false %}
+    {% endif %}
+  {% endif %}
+{%endfor%}
+
+{%if settings.hero_social_show != blank%}
+{%if settings.show_twitterfeed and template contains 'index' and settings.twitter_token != blank%}
+  {%include 'twitter-feed'%}
+{%endif%}
+{%if settings.show_igram and template contains 'index' and settings.igram_access_token != blank %}
+  {%unless settings.show_twitterfeed%}
+    <hr>
+  {%endunless%}
+  {%include 'instagram-feed'%}
+{%endif%}
+{%endif%}

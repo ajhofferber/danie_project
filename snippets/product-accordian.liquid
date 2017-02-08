@@ -1,0 +1,26 @@
+<div class="accordian" itemprop="description">
+  {%if settings.show_product_extra_one or settings.show_product_extra_two%}
+    <div class="accordHeaderLinks">
+      <a class="active" href="#accordianOne">{{ 'products.product.tabs_description_title' | t }}</a>
+      {%if settings.show_product_extra_two%}
+        <a href="#accordianTwo">{{settings.title_product_extra_one}}</a>
+      {%endif%}
+      {%if settings.show_product_extra_two%}
+        <a href="#accordianThree">{{settings.title_product_extra_two}}</a>
+      {%endif%}
+    </div>
+  {%endif%}
+  <section id="accordianOne" class="rte active">
+    {{product.description}}
+  </section>
+  {%if settings.show_product_extra_one%}
+    <section id="accordianTwo" class="rte">
+      {{settings.content_product_extra_one}} 
+    </section>
+  {%endif%}
+  {%if settings.show_product_extra_two%}
+    <section id="accordianThree" class="rte">
+      {{settings.content_product_extra_two}}
+    </section>
+  {%endif%}
+</div>

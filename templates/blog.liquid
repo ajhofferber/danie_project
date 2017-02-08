@@ -1,0 +1,81 @@
+{% paginate blog.articles by 10 %}
+  <div class="sectionWrap halfGutter centerContent blogStrip">
+    <div class="grid flexGrid gridJustify centerColumns">
+      <div class="half flexItem ieFlexFix alignCenter">
+        <div>
+          <h1 id="blogTitle" class="genHeading">
+            {% if current_tags %}
+              {{ blog.title | link_to: blog.url }} &mdash; {{ current_tags.first }}
+            {% else %}
+              {{ blog.title }}
+            {% endif %}
+          </h1>
+          <a class="icon-rss" href="{{ shop.url }}{{ blog.url }}.atom">
+            {%include 'svg-definitions' with 'rss'%}
+          </a>
+        </div>
+        {%if page_description%}
+          <p id="blogDescription" class="rte articleExcerpt">{{page_description}}</p>
+        {%endif%}
+      </div>
+    </div>
+  </div>
+  {%for article in blog.articles%}
+    <article>
+      {%if article.image%}
+        <div class="stripHero fixedHeight" style="background-image:url({{ article.image.src | img_url: 'master' }});"></div>
+      {%endif%}
+      <div class="sectionWrap halfGutter blogStrip centerContent">
+        <div class="grid flexGrid gridJustify centerColumns">
+          <div class="half flexItem ieFlexFix alignCenter">
+            <h2 class="genHeading">
+              <a href="{{article.url}}">{{article.title}}</a>
+            </h2>
+            {%if settings.show_article_meta%}
+            <ul class="articleMeta">
+              <li>{{ article.published_at | date: '%B %d, %Y' }}</li>
+              {% assign author = article.author  %}
+              <li>{{ 'blogs.article.article_author' | t: author: author}}</li>
+              <li>{%if article.comments_count > 0 %}{{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}{%else%}{{'blogs.comments.comments_empty'|t}}{%endif%}</li>
+            </ul>
+            {%endif%}
+            <div class="articleExcerpt rte">
+              {{ article.excerpt_or_content | strip_html | truncatewords: 120 }}
+            </div>
+            <a href="{{article.url}}" class="button">{{ 'blogs.article.read_more' | t}}</a>
+            {% if article.tags.size > 0 %}
+              <ul class="tags">
+              {% for tag in article.tags %}
+                <li><a href="{{blog.url}}/tagged/{{tag|handelize}}">#{{tag}}</a></li>
+              {%endfor%}
+              </ul>
+            {%endif%}
+          </div>
+        </div>
+      </div>
+    </article>
+  {%endfor%}
+  {% if paginate.pages > 1 %}
+    <div class="stripSection blogStrip centerContent">
+      <div class="grid">
+        <div class="pagination half flexGrid gridJustify ieFlexFix">
+          <hr>
+          <div class="leftSide half flexItem">
+            {% for part in paginate.parts %}
+              <a {%if part.title == paginate.current_page%}class="active"{%endif%} href="{{part.url}}">{{part.title}}</a>
+            {%endfor%}
+          </div>
+          <div class="rightSide half flexItem">
+            {% if paginate.previous %}
+              <a href="{{ paginate.previous.url }}">{{ paginate.previous.title | replace:'« ',''}}</a>
+              <span>/</span>
+            {% endif %}
+            {% if paginate.next %}
+              <a href="{{ paginate.next.url }}">{{ paginate.next.title | replace:' »', ''}}</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endpaginate %}

@@ -1,0 +1,42 @@
+<div class="fullPageSectionsWrap {% if is_first %}no-top-border{% endif %} {% if is_last and settings.hero_social_show != blank and settings.show_twitterfeed %}no-bottom-border{% endif %}">
+{% for i in (1..3) %}
+  {% capture section %}section_{{ i }}_enable{% endcapture %}
+  {% capture section_img %}section_{{ i }}.jpg{% endcapture %}
+  {% capture section_heading %}section_{{ i }}_heading{% endcapture %}
+  {% capture section_copy %}section_{{ i }}_copy{% endcapture %}
+  {% capture section_link %}section_{{ i }}_link{% endcapture %}
+  {% capture section_button %}section_{{ i }}_button{% endcapture %}
+  {%if settings[section]%}
+     {%assign full = true%}
+     {%if settings[section_heading] != "" or settings[section_copy] != ""%}
+     {%assign full = false%}
+     {%endif%}
+    <div class="fullPageSection">
+      <div class="bgImage {%if  full == false%}fixedPosition{%endif%}" style="background-image:url({{section_img|asset_url}});"></div>
+      {%if settings[section_heading] != "" or settings[section_copy] != ""%}
+      <div class="content">
+        <div class="inner">
+          {%if settings[section_heading] != ""%}
+          <h2 class="genHeadingXL">
+            {%if settings[section_link] != ""%}
+              <a href="{{settings[section_link]}}">
+              {{settings[section_heading]}}
+              </a>
+            {%else%}
+              {{settings[section_heading]}}
+            {%endif%}
+          </h2>
+          {%endif%}
+          {%if settings[section_copy] != ""%}
+            <p>{{settings[section_copy]}}</p>
+          {%endif%}
+          {%if settings[section_button] != ""%}
+            <a href="{{settings[section_link]}}"><div class="button">{{settings[section_button]}}</div></a>
+         {%endif%}
+        </div>
+      </div>
+      {%endif%}
+    </div>
+  {%endif%}
+{%endfor%}
+</div>

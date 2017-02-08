@@ -1,0 +1,28 @@
+{%assign layoutType = collection-thumb%}
+{% case layoutType %}
+  {% when 'mixGrid' %}
+    {%capture layout%}
+      {%cycle 'half','half','oneThird','oneThird','oneThird'%}
+    {%endcapture%}
+  {% when 'mixGridTwo' %}
+    {%capture layout%}
+      {%cycle 'oneThird','oneThird','oneThird','half','half'%}
+    {%endcapture%}
+  {% when 'thirds' %}
+    {%assign layout = "oneThird"%}
+  {% when 'half' %}
+    {%assign layout = "half"%}
+  {% when 'full' %}
+    {%assign layout = "fullSpan"%}
+{%endcase%}
+<li class="{{layout}} flexItem">
+  <a href="{{link}}" style="background-image:url({{image}});">
+    <div class="content">
+      <div class="gridTable">
+        <div class="flexItem">
+          <p class="genHeadingXL">{{title}}</p>
+        </div>
+      </div>
+    </div>
+  </a>
+</li>

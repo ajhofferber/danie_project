@@ -1,0 +1,56 @@
+{% assign normalProduct = false %}
+{% if product and template != 'product.alternate' %}
+  {% assign normalProduct = true %}
+{% endif %}
+
+{% if settings.newsletter_form_action != blank or normalProduct %}
+<div id="popOuts">
+  {%if product and template != 'product.alternate' %}
+    <div id="gallery" class="innerWrapper closePopOut">
+      <a class="closePopOut closeIcon" href="#">
+        {%include 'svg-definitions' with 'close'%}
+      </a>
+      <div class="grid animateIn">
+        {%for image in product.images%}
+          <img id="indexImage_{{forloop.index}}" src="{{ image.src | img_url: '1024x1024' }}" alt="{{ image.alt | escape }}">
+        {%endfor%}
+      </div>
+    </div>
+  {%endif%}
+  <div id="newsLetter" class="innerWrapper">
+    <a class="closePopOut closeIcon" href="#">
+      {%include 'svg-definitions' with 'close'%}
+    </a>
+
+      <div class="closePopOut fullBackClose"></div>
+     
+        <div class="animateIn gridJustify">
+          {%if settings.newsletterImage%}
+            <div class="half imageWrap flexItem" style="background-image:url({{'news_hero.jpg'|asset_url}});"></div>
+          {%endif%}
+          <div class="half flexItem">
+            <div class="formWrap gridJustify centerColumns">
+              <div class="innerFlex">
+                <div class="rte">
+                  {%if settings.newsletterTitle != blank%}
+                    <h3>{{settings.newsletterTitle}}</h3>
+                  {%endif%}
+                  {%if settings.newsletterStrap != blank%}
+                    <p class="subTitle">{{settings.newsletterStrap}}</p>
+                  {%endif%}  
+                </div>
+                <form action="{{ settings.newsletter_form_action }}" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank">
+                  <label for="Email">{{ 'general.newsletter_form.newsletter_email' | t }}</label>
+                  <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="EMAIL" id="Email" class="input-group-field newsletter__input" autocorrect="off" autocapitalize="off" required>
+                  <input name="subscribe"  type="submit" class="button formSend" value="{{ 'general.newsletter_form.submit' | t }}"/>
+                  <a class="closePop" href="#">{{ 'general.newsletter_form.cancel' | t }}</a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+ 
+  </div>
+</div>
+{% endif %}

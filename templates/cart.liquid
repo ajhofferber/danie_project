@@ -1,0 +1,50 @@
+<div class="stripSection cartMain">
+  <div class="grid flexGrid gridJustify">
+    {% if cart.item_count < 1 %}
+      <h1 id="cartHeading">{{ 'cart.general.empty' | t }} {{ 'cart.general.continue_browsing_html' | t }}</h1>
+    {%else%}
+      <h1 id="cartHeading">{{ 'cart.general.subtotal' | t }} <span id="cartTotal">{{cart.total_price|money}}</span></h1>
+      <form id="cartForm" class="fullSpan flexItem" id="cartForm" action="/cart" method="post" data-money_format="{{ shop.money_format }}">
+        {% for item in cart.items %} 
+          <ul class="cartRow flexGrid fullSpan gridJustify">
+            <li><img  src="{{item.image.src | product_img_url: 'medium'}}" alt="{{ item.title | escape }}" /></li>
+            <li>
+              <a href="{{ item.product.url }}">{{ item.title }}</a>
+              {% assign property_size = item.properties | size %}
+              {% if property_size > 0 %}
+                {% for p in item.properties %}
+                  {% unless p.last == blank %}
+                    {{ p.first }}:
+                    {% if p.last contains '/uploads/' %}
+                      <a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
+                    {% else %}
+                      {{ p.last }}
+                    {% endif %}
+                    <br>
+                  {% endunless %}
+                {% endfor %}
+              {% endif %}
+            </li>
+            <li>{{item.price | money}}</li>
+            <li>
+              <input class="qtyInput" type="number" name="updates[]" id="updates_{{ item.id }}"  data-lineItem="{{ forloop.index }}"  min="0" {% unless item.variant.inventory_management == blank or item.variant.inventory_policy == 'continue' %} max="{{ item.variant.inventory_quantity }}"{%endunless%} value="{{ item.quantity }}" />
+            </li>
+            <li>
+              <a  href="/cart/change?line={{ forloop.index }}&quantity=0">{%include 'svg-definitions' with 'close'%}</a>
+            </li>
+          </ul>
+        {%endfor%}
+        <div class="cartfoot">
+          <button id="goToCheckout" type="submit"  name="checkout" class="button">{{ 'cart.general.checkout' | t }}</button>
+          <input id="updateCart" type="submit" name="update" class="button linkButton" value="{{ 'cart.general.update' | t }}">
+
+          {% if additional_checkout_buttons and settings.cart_additional_buttons %}
+            <div class="additional-checkout-buttons">
+              {{ content_for_additional_checkout_buttons }}
+            </div>
+          {% endif %}
+        </div>
+      </form>
+    {%endif%}
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<li class="fxInElement fadeInSlow">
+  <a href="{{ product.url | within: collection }}">
+    <div class="imgWrap">
+      <img src="{{product.images.first | img_url:'1024x1024'}}" alt="{{product.title}}">
+      {%if product.images[1]%}
+        <img data-scroll-speed="7" class="abImage left" src="{{product.images[1] | img_url:'1024x1024'}}" alt="{{product.images[2].alt}}">
+      {%endif%}
+      {%if product.images[2]%}
+        <img data-scroll-speed="7" class="abImage right" src="{{product.images[2] | img_url:'1024x1024'}}" alt="{{product.images[2].alt}}">
+      {%endif%}
+    </div>
+    <p class="genHeadingXL">{{product.title}}</p>
+  </a>
+</li>

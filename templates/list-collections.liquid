@@ -1,0 +1,44 @@
+{%assign colTotal = collections.size%}
+{% if collections.frontpage%}
+  {%assign colTotal = colTotal | minus:1%}
+{%endif%}
+<div class="collectionGrid sectionWrap hasBlockTitle hasGrid">
+  <div class="grid">
+    {%if colTotal == 0%}
+      <div class="blockTitle flexGrid">
+        <h1 class="genHeadingXL ">{{ 'homepage.onboarding.title' | t }}</h1>
+        <div class="rte half flexItem">
+          <p>{{ 'homepage.onboarding.product_helper_text' | t }}</p>
+          <p><a href="/admin" >{{ 'homepage.onboarding.adminLink' | t }}</a></p>
+        </div>
+      </div>
+      <ul class="flexGrid gridJustify centerColumns">
+        {%for i in (1..2)%}
+          {%include 'onboarding' with 'collection-thumb'%}
+        {%endfor%}
+      </ul>
+    {%else%}
+      <div class="blockTitle flexGrid">
+        <h1 class="genHeadingXL ">{{ 'collections.list_collections.title' | t }}</h1>
+      </div>
+      <ul class="flexGrid gridJustify centerColumns">
+        {%assign row ='half'%}
+        {%if colTotal == 1%}
+          {%assign row ='singleRow'%}
+        {%endif%}
+        {%for collection in collections%}
+          {%assign title = collection.title%}
+          {%assign link = collection.url%}
+          {%if collection.image%}
+            {%assign image = collection.image | img_url:'large'%}
+          {%else%}
+            {%assign image = collection.products.first | img_url:'large'%}
+          {%endif%}
+          {%unless collection.handle == 'frontpage'%}
+            {%include 'collection-thumb' with row %}
+          {%endunless%}
+        {%endfor%}
+      </ul>
+    {%endif%}
+  </div>
+</div>

@@ -1,0 +1,117 @@
+{%assign cTop = true%}
+{%assign rTop = false%}
+
+{%if settings.use_tran or template contains 'product.alternate'%}
+  {%assign tranTop = true%}
+{%else%}
+  {%assign tranTop = false%}
+{%endif%}
+
+{%if settings.use_sticky%}
+  {%assign stickyTop = true%}
+{%else%}
+  {%assign stickyTop = false%}
+  {%assign cTop = false%}
+{%endif%}
+
+{%if template contains 'collection' and collection.image %}
+  {%assign cTop = false%}
+  {%if tranTop == true and stickyTop == false%}
+    {%assign rTop = true%}
+  {%endif%}
+  {%if tranTop == false and stickyTop == true%}
+    {%assign cTop = true%}
+  {%endif%}
+{%endif%}
+
+{%if template contains 'product.alternate' %}
+  {%assign cTop = false%}
+  {%assign scrollFX = "scrollFX"%}
+  {%if tranTop == true and stickyTop == false%}
+    {%assign rTop = true%}
+  {%endif%}
+  {%if tranTop == false and stickyTop == true%}
+    {%assign cTop = true%}
+  {%endif%}
+{%endif%}
+
+{%if  template contains 'index'%}
+  {%assign cTop = false%}
+{%endif%}
+
+{%assign showNav = true%}
+{%if template contains 'password'%}
+  {%unless template contains 'customer'%}
+    {%assign showNav = false%}
+  {%endunless%}
+{%endif%}
+{%assign showNav = true%}
+{%assign headerType = header%}
+{% case headerType %}
+  {% when 'noNav' %}
+    {%assign showNav = false%}
+{%endcase%}
+
+{%if settings.use_page_border%}
+  <div id="frame">
+    {%for i in (1..4)%}
+      <span></span>
+    {%endfor%}
+  </div>
+{%endif%}
+<header class="{{scrollFX}} {%if tranTop == false or stickyTop == false and template != 'product.alternate'%}noTran {%endif%}{%if showNav == false%}noHover {%else%}{%if  template contains 'index' and settings.use_sticky%}lockFX {%else%}{%if settings.use_sticky%}locked  {%endif%}{%endif%}{%endif%}" role="banner">
+  <div class="grid flexGrid gridJustify">
+    {%if showNav == true%}
+      <div class="leftMenu flexItem oneThird gridAlignLeft">
+        {%include 'burger-nav'%}
+        <a id="searchStore" href="#footerSearch">
+          {%include 'svg-definitions' with 'search'%}
+        </a>
+        {% if settings.newsletter_form_action != blank %}
+          <a href="#" class="hasPop" id="newsSignUp" data-getPopout="#newsLetter">
+            {%include 'svg-definitions' with 'news'%}
+          </a>
+        {% endif %}
+      </div>
+    {%endif%}
+    <a class="logo flexItem oneThird alignCenter" href="/" itemscope itemtype="http://schema.org/Organization">
+      {%assign logoImg = 'logo.png' | asset_url %}
+      {% if settings.logo_use_image %}
+        <img src="{{logoImg}}" alt="{{ shop.name }}" itemprop="logo">
+      {%else%}
+        {{ shop.name }}
+      {%endif%}
+    </a>
+    {%if showNav == true%}
+      <div class="rightMenu flexItem oneThird alignRight">
+        {% if shop.customer_accounts_enabled %}
+          {%if customer%}
+            <a class="header-account" href="/account">{{ 'layout.customer.account' | t }}</a>
+          {%else%}
+            <a class="header-account" href="/account/login">{{ 'layout.customer.log_in' | t }}</a>
+          {%endif%}
+        {% endif %}
+        <div class="header-cart-wrapper">
+          <div class="header-cart-wrapper-inner">
+            {% if template == 'cart' %}
+              {% assign isCart = true %}
+            {% endif %}
+            <a href="/cart" {% unless isCart %}data-header-cart-toggle{% endunless %}><span>{{ 'layout.cart.title' | t }}</span> (<span id="cartItemCount">{{cart.item_count}}</span>)</a>
+            {% unless isCart %}
+              {% include "header-cart" %}
+            {% endunless %}
+          </div>
+        </div>
+      </div>
+      <form id="headerSearch" class="gridJustify flexGrid" action="/search" method="get" role="search">
+        <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" class="input-group-field" aria-label="{{ 'general.search.placeholder' | t }}">
+        <a id="closeSearch" href="#" class="button tranBack">
+          {%include 'svg-definitions' with 'close'%}
+        </a>
+      </form>
+    {%endif%} 
+  </div>
+  {%if showNav == true%}
+    {%include 'regular-nav'%} 
+  {%endif%} 
+</header>

@@ -1,0 +1,21 @@
+<div class="sectionWrap hasGrid hasBlockTitle">
+  <div class="blockTitle flexGrid">
+    <h1 class="genHeadingXL half flexItem">{{collection.title}}</h1>
+    {%if collection.description%}
+      <div class="rte half flexItem">
+        {{collection.description}}
+      </div>
+    {%endif%}
+  </div>
+  <div class="parCollection">
+    <div class="grid">
+      <div class="productListingWrap">
+        <ul class="parallaxListing">
+          {%for product in collection.products%}
+            {%include 'product-thumb-parallax'%}
+          {%endfor%}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

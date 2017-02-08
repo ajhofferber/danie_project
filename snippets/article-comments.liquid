@@ -1,0 +1,75 @@
+{% assign number_of_comments = article.comments_count %}
+{% if comment and comment.created_at %}
+  {% assign number_of_comments = article.comments_count %}
+{% endif %}
+{% paginate article.comments by 12%}
+  {% if number_of_comments > 0 %}
+    <h3 class="genHeading">{{ 'blogs.comments.comments_with_count' | t: count: number_of_comments }}</h3>
+  {%endif%}
+  <div id="Comments">
+    {% if comment and comment.created_at %}
+      <p class="note form-success">
+        {% if blog.moderated? %}
+          {{ 'blogs.comments.success_moderated' | t}}
+        {% else %}
+          {{ 'blogs.comments.success' | t}}
+        {% endif %}
+      </p>
+    {% endif %}
+    {% if number_of_comments > 0 %}
+      <ul>
+        {% for comment in article.comments %}
+          {% if comment and comment.created_at %}
+            <li id="{{ comment.id }}" class="comment{% unless number_of_comments > article.comments_count %}{% if forloop.first %} first{% endif %}{% endunless %}{% if forloop.last %} last {% endif %}">
+              <div class="rte">
+                {{ comment.content }}
+              </div>
+              <span>
+                <p><strong>{{ comment.author }}</strong></p>
+                <p><time datetime="{{ comment.created_at | date: '%Y-%m-%d' }}">{{ comment.created_at | date: '%B %d, %Y'}}</time></p>
+              </span>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      {% if paginate.pages > 1 %}
+        <div class="pagination fullSpan flexGrid gridJustify">
+          <hr>
+          <div class="leftSide half flexItem">
+            {% for part in paginate.parts %}
+              <a {%if part.title == paginate.current_page%}class="active"{%endif%} href="{{part.url}}">{{part.title}}</a>
+            {%endfor%}
+          </div>
+          <div class="rightSide half flexItem">
+            {% if paginate.previous %}
+              <a href="{{ paginate.previous.url }}">{{ paginate.previous.title | replace:'« ',''}}</a>
+              <span>/</span>
+            {% endif %}
+            {% if paginate.next %}
+              <a href="{{ paginate.next.url }}">{{ paginate.next.title | replace:' »', ''}}</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endif %}
+    <div class="formWrap">
+      {% form 'new_comment', article %}
+        <h3 class="genHeading" id="AddCommentTitle">{{ 'blogs.comments.title' | t}}</h3>
+        {{ form.errors | default_errors }}
+        <input type="text" name="comment[author]" class="{% if form.errors contains 'author' %} error{% endif %}" placeholder="{{ 'blogs.comments.name' | t }}" value="{{ form.author }}" autocapitalize="words" required>
+        <input type="email" name="comment[email]" class="{% if form.errors contains 'email' %} error{% endif %}" placeholder="{{ 'blogs.comments.email' | t }}" value="{{ form.email }}" autocorrect="off" autocapitalize="off" required>
+        <textarea rows="10" name="comment[body]"class="{% if form.errors contains 'body' %} error{% endif %}" placeholder="{{ 'blogs.comments.message' | t }}" required>{{ form.body }}</textarea>
+      </div>
+      {% if blog.moderated? %}
+        <p>{{ 'blogs.comments.moderated' | t}}</p>
+      {% endif %}
+      <input type="submit" class="button" value="{{ 'blogs.comments.post' | t}}"/>
+      {% if form.errors %}
+        {% assign newHash = 'AddCommentTitle' %}
+      {% endif %}
+      {% if form.posted_successfully? %}
+        {% assign newHash = 'Comments' %}
+      {% endif %}
+    {% endform %}
+  </div>
+{% endpaginate %}

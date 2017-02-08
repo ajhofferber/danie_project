@@ -1,0 +1,32 @@
+{% assign count = 0 %}
+{% for i in (1..3) %}
+  {% capture base %}asym_{{ i }}{% endcapture %}
+  {% capture enabled %}{{ base }}_enable{% endcapture %}
+  {% if settings[enabled] %}
+    {% assign count = count | plus: 1 %}
+    {% capture image %}{{ base }}.jpg{% endcapture %}
+    {% capture link %}{{ base }}_link{% endcapture %}
+    {% capture heading %}{{ base }}_heading{% endcapture %}
+    {% capture copy %}{{ base }}_copy{% endcapture %}
+    <div class="fxInElement asymSection {% cycle 'layoutOne', 'layoutTwo', 'layoutThree' %}">
+      {% unless count == 1 %}<hr>{% endunless %}
+      <div class="grid">
+        <div class="outerWrap {% cycle '', 'flexGrid gridJustify', 'flexGrid gridJustify' %}">
+          <div class="innerWrap {% cycle '', 'twoThird flexItem', '' %}">
+            <div class="imgWrap fadeIn" style="background-image:url({{ image | asset_url }});"></div>
+            <div class="sectionTitle half {% cycle 'flexGrid gridJustify', '', '' %} flexItem">
+              <p class="genHeadingXL"data-scroll-speed="7" ><a href="{{ settings[link] }}">{{ settings[heading] }}</a></p>
+            </div>
+          </div>
+          {% capture copyWidth %}{% cycle '', 'oneThird flexItem', '' %}{% endcapture %}
+          {% capture pWidth %}{% cycle 'half flexItem', '', 'half flexItem' %}{% endcapture %}
+          {% if settings[copy] != "" %}
+            <div class="sectionCopy {{ copyWidth }}">
+              <p class="{{ pWidth }}">{{ settings[copy] }}</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endfor %}
